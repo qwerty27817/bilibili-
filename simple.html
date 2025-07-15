@@ -1,0 +1,787 @@
+本项目由b站up主高兴的阿飞哥借助ai开发，本项目仅供学习用途，切勿商用，否则后果自负。
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B站入站考试</title>
+    <style>
+        :root {
+            --bilibili-pink: #FB7299;
+            --bilibili-blue: #23ADE5;
+            --bilibili-dark: #222;
+            --bilibili-light: #F4F5F7;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: var(--bilibili-light);
+            color: var(--bilibili-dark);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--bilibili-pink);
+        }
+        
+        h1 {
+            color: var(--bilibili-pink);
+            margin-bottom: 10px;
+        }
+        
+        .timer-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            background-color: var(--bilibili-light);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .timer {
+            font-weight: bold;
+            color: var(--bilibili-blue);
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        .question-container.active {
+            display: block;
+        }
+        
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--bilibili-dark);
+        }
+        
+        .options {
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: var(--bilibili-light);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .option.selected {
+            background-color: var(--bilibili-pink);
+            color: white;
+        }
+        
+        .true-false-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .true-false-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--bilibili-light);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .true-false-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .true-false-btn.selected {
+            background-color: var(--bilibili-pink);
+            color: white;
+        }
+        
+        .fill-blank-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--bilibili-blue);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background-color: #1a8fc7;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            background-color: var(--bilibili-light);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--bilibili-pink);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 90%;
+            width: 500px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .modal-title {
+            color: var(--bilibili-pink);
+            margin-bottom: 15px;
+        }
+        
+        .modal-score {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px 0;
+            color: var(--bilibili-blue;
+        }
+        
+        .modal-message {
+            margin-bottom: 20px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--bilibili-blue);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .modal-btn:hover {
+            background-color: #1a8fc7;
+        }
+        
+        .modal-btn.pink {
+            background-color: var(--bilibili-pink);
+        }
+        
+        .modal-btn.pink:hover {
+            background-color: #e55f84;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .question {
+                font-size: 16px;
+            }
+            
+            .option {
+                padding: 8px;
+                font-size: 14px;
+            }
+            
+            .nav-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>B站入站考试</h1>
+            <p>欢迎来到B站入站考试，测试你对B站和二次元文化的了解程度！</p>
+        </header>
+        
+        <div class="timer-container">
+            <div>总剩余时间: <span class="timer" id="total-timer">60:00</span></div>
+            <div>本题剩余时间: <span class="timer" id="question-timer">03:00</span></div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <!-- 题目容器将通过JavaScript动态生成 -->
+        <div id="questions-container"></div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="next-btn" disabled>下一题</button>
+        </div>
+    </div>
+    
+    <!-- 结果弹窗 -->
+    <div class="modal" id="result-modal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modal-title">考试结果</h2>
+            <div class="modal-score" id="modal-score">得分: 0/20</div>
+            <div class="modal-message" id="modal-message"></div>
+            <div class="modal-buttons">
+                <a href="#" class="modal-btn" id="restart-btn">重新开始</a>
+                <a href="https://m.bilibili.com/" class="modal-btn pink" id="bilibili-btn">前往现在的哔哩哔哩</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 题库
+        const questions = [
+            // 选择题
+            {
+                type: "choice",
+                question: "B站最初的站长是谁？",
+                options: [
+                    "A. 徐逸",
+                    "B. 陈睿",
+                    "C. 李旎",
+                    "D. 张一鸣"
+                ],
+                correctAnswer: "A. 徐逸"
+            },
+            {
+                type: "choice",
+                question: "在B站语境中，\"陈叔叔\"指的是谁？",
+                options: [
+                    "A. 徐逸",
+                    "B. B站老用户的统称",
+                    "C. 陈睿",
+                    "D. 张一鸣"
+                ],
+                correctAnswer: "C. 陈睿"
+            },
+            {
+                type: "choice",
+                question: "B站最初的名字是什么？",
+                options: [
+                    "A. Mikufans（ミクファンズ）",
+                    "B. A站（AcFun）",
+                    "C. Bilibili.tv",
+                    "D. 哔哩哔哩漫画"
+                ],
+                correctAnswer: "A. Mikufans（ミクファンズ）"
+            },
+            {
+                type: "choice",
+                question: "A站的全名是什么？",
+                options: [
+                    "A. Animation Fun",
+                    "B. AcFun（弹幕视频网）",
+                    "C. Anime Channel"
+                ],
+                correctAnswer: "B. AcFun（弹幕视频网）"
+            },
+            {
+                type: "choice",
+                question: "B站的官方付费会员体系名称是？",
+                options: [
+                    "A. BI 超级会员",
+                    "B. 哔哩哔哩大会员",
+                    "C. BIP 尊享会员",
+                    "D. 哔哩豆高级会员"
+                ],
+                correctAnswer: "B. 哔哩哔哩大会员"
+            },
+            {
+                type: "choice",
+                question: "\"awsl\"在二次元语境中的含义是？",
+                options: [
+                    "A. 啊我死了",
+                    "B. 爱我苏联",
+                    "C. 阿伟上楼",
+                    "D. 安我睡了"
+                ],
+                correctAnswer: "A. 啊我死了"
+            },
+            {
+                type: "choice",
+                question: "日本动漫中常说的\"颜艺\"指的是？",
+                options: [
+                    "A. 面部表情夸张的表演",
+                    "B. 颜值艺术",
+                    "C. 角色颜值排名",
+                    "D. 化妆技巧"
+                ],
+                correctAnswer: "A. 面部表情夸张的表演"
+            },
+            {
+                type: "choice",
+                question: "\"FFF团\"出自哪部动漫？",
+                options: [
+                    "A. 《笨蛋、测验、召唤兽》",
+                    "B. 《刀剑神域》",
+                    "C. 《进击的巨人》",
+                    "D. 《东京复仇者》"
+                ],
+                correctAnswer: "A. 《笨蛋、测验、召唤兽》"
+            },
+            {
+                type: "choice",
+                question: "\"钉宫四萌\"指的是钉宫理惠配音的四位经典角色，以下哪一位不属于？",
+                options: [
+                    "A. 夏娜（《灼眼的夏娜》）",
+                    "B. 露易丝（《零之使魔》）",
+                    "C. 逢坂大河（《龙与虎》）",
+                    "D. 雷姆（《Re：从零开始的异世界生活》）"
+                ],
+                correctAnswer: "D. 雷姆（《Re：从零开始的异世界生活》）"
+            },
+            {
+                type: "choice",
+                question: "\"此生无悔入东方，来世愿生幻想乡\"中的\"东方\"指的是？",
+                options: [
+                    "A. 《东方Project》系列",
+                    "B. 《东方少年》",
+                    "C. 《东方快车谋杀案》",
+                    "D. 泛指东方文化"
+                ],
+                correctAnswer: "A. 《东方Project》系列"
+            },
+            // 判断题
+            {
+                type: "true-false",
+                question: "B站的镇站之宝是《英雄联盟》的游戏视频。",
+                correctAnswer: "错误"
+            },
+            {
+                type: "true-false",
+                question: "\"空降\"在B站弹幕中表示直接跳转到视频某一时间点。",
+                correctAnswer: "正确"
+            },
+            {
+                type: "true-false",
+                question: "\"番剧\"一词在二次元中特指日本深夜动画。",
+                correctAnswer: "错误"
+            },
+            {
+                type: "true-false",
+                question: "B站\"充电计划\"是用户为UP主提供创作支持的付费功能。",
+                correctAnswer: "正确"
+            },
+            {
+                type: "true-false",
+                question: "\"哥特萝莉塔（Lolita）\"风格服装起源于动漫《Lolita》。",
+                correctAnswer: "错误"
+            },
+            // 填空题
+            {
+                type: "fill-blank",
+                question: "在B站手机端，长按__________可以触发\"一键三连\"（点赞、投币、收藏）。",
+                correctAnswer: "点赞"
+            },
+            {
+                type: "fill-blank",
+                question: "B站用户常说的\"老番茄\"是__________区的知名UP主。",
+                correctAnswer: "游戏"
+            },
+            {
+                type: "fill-blank",
+                question: "B站用户等级最高为多少级？",
+                correctAnswer: "6"
+            },
+            {
+                type: "fill-blank",
+                question: "二次元中\"OC\"指的是__________。",
+                correctAnswer: "原创角色"
+            },
+            {
+                type: "fill-blank",
+                question: "B站年度弹幕\"爷青回\"的完整含义是__________。",
+                correctAnswer: "爷的青春回来了"
+            }
+        ];
+        
+        // 考试状态
+        let currentQuestionIndex = 0;
+        let userAnswers = Array(questions.length).fill(null);
+        let score = 0;
+        let totalTime = 60 * 60; // 60分钟，以秒为单位
+        let questionTime = 3 * 60; // 3分钟，以秒为单位
+        let totalTimer;
+        let questionTimer;
+        
+        // DOM元素
+        const questionsContainer = document.getElementById('questions-container');
+        const nextBtn = document.getElementById('next-btn');
+        const totalTimerDisplay = document.getElementById('total-timer');
+        const questionTimerDisplay = document.getElementById('question-timer');
+        const progressBar = document.getElementById('progress-bar');
+        const resultModal = document.getElementById('result-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalScore = document.getElementById('modal-score');
+        const modalMessage = document.getElementById('modal-message');
+        const restartBtn = document.getElementById('restart-btn');
+        const bilibiliBtn = document.getElementById('bilibili-btn');
+        
+        // 初始化考试
+        function initExam() {
+            // 生成所有题目
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-container';
+                questionDiv.id = `question-${index}`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question';
+                questionText.textContent = `${index + 1}. ${q.question}`;
+                questionDiv.appendChild(questionText);
+                
+                if (q.type === 'choice') {
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'options';
+                    
+                    q.options.forEach(option => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'option';
+                        optionDiv.textContent = option;
+                        optionDiv.addEventListener('click', () => {
+                            // 清除其他选项的选择
+                            optionsDiv.querySelectorAll('.option').forEach(opt => {
+                                opt.classList.remove('selected');
+                            });
+                            optionDiv.classList.add('selected');
+                            userAnswers[index] = option;
+                            nextBtn.disabled = false;
+                        });
+                        optionsDiv.appendChild(optionDiv);
+                    });
+                    
+                    questionDiv.appendChild(optionsDiv);
+                } else if (q.type === 'true-false') {
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'true-false-options';
+                    
+                    const trueBtn = document.createElement('button');
+                    trueBtn.className = 'true-false-btn';
+                    trueBtn.textContent = '正确';
+                    trueBtn.addEventListener('click', () => {
+                        optionsDiv.querySelectorAll('.true-false-btn').forEach(btn => {
+                            btn.classList.remove('selected');
+                        });
+                        trueBtn.classList.add('selected');
+                        userAnswers[index] = '正确';
+                        nextBtn.disabled = false;
+                    });
+                    
+                    const falseBtn = document.createElement('button');
+                    falseBtn.className = 'true-false-btn';
+                    falseBtn.textContent = '错误';
+                    falseBtn.addEventListener('click', () => {
+                        optionsDiv.querySelectorAll('.true-false-btn').forEach(btn => {
+                            btn.classList.remove('selected');
+                        });
+                        falseBtn.classList.add('selected');
+                        userAnswers[index] = '错误';
+                        nextBtn.disabled = false;
+                    });
+                    
+                    optionsDiv.appendChild(trueBtn);
+                    optionsDiv.appendChild(falseBtn);
+                    questionDiv.appendChild(optionsDiv);
+                } else if (q.type === 'fill-blank') {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'fill-blank-input';
+                    input.placeholder = '请输入答案';
+                    input.addEventListener('input', () => {
+                        userAnswers[index] = input.value.trim();
+                        nextBtn.disabled = userAnswers[index] === '';
+                    });
+                    questionDiv.appendChild(input);
+                }
+                
+                questionsContainer.appendChild(questionDiv);
+            });
+            
+            // 显示第一题
+            showQuestion(0);
+            
+            // 开始计时器
+            startTotalTimer();
+            startQuestionTimer();
+            
+            // 更新进度条
+            updateProgressBar();
+        }
+        
+        // 显示指定索引的题目
+        function showQuestion(index) {
+            // 隐藏所有题目
+            document.querySelectorAll('.question-container').forEach(q => {
+                q.style.display = 'none';
+            });
+            
+            // 显示当前题目
+            document.getElementById(`question-${index}`).style.display = 'block';
+            
+            // 重置下一题按钮状态
+            nextBtn.disabled = userAnswers[index] === null;
+            
+            // 恢复用户之前的答案
+            if (userAnswers[index] !== null) {
+                if (questions[index].type === 'choice') {
+                    const options = document.querySelectorAll(`#question-${index} .option`);
+                    options.forEach(opt => {
+                        if (opt.textContent === userAnswers[index]) {
+                            opt.classList.add('selected');
+                        }
+                    });
+                } else if (questions[index].type === 'true-false') {
+                    const buttons = document.querySelectorAll(`#question-${index} .true-false-btn`);
+                    buttons.forEach(btn => {
+                        if (btn.textContent === userAnswers[index]) {
+                            btn.classList.add('selected');
+                        }
+                    });
+                } else if (questions[index].type === 'fill-blank') {
+                    const input = document.querySelector(`#question-${index} .fill-blank-input`);
+                    input.value = userAnswers[index];
+                }
+            }
+            
+            // 重置题目计时器
+            resetQuestionTimer();
+        }
+        
+        // 开始总计时器
+        function startTotalTimer() {
+            totalTimer = setInterval(() => {
+                totalTime--;
+                
+                // 更新显示
+                const minutes = Math.floor(totalTime / 60);
+                const seconds = totalTime % 60;
+                totalTimerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // 时间到，自动提交
+                if (totalTime <= 0) {
+                    clearInterval(totalTimer);
+                    calculateScore();
+                    showResult();
+                }
+            }, 1000);
+        }
+        
+        // 开始题目计时器
+        function startQuestionTimer() {
+            questionTimer = setInterval(() => {
+                questionTime--;
+                
+                // 更新显示
+                const minutes = Math.floor(questionTime / 60);
+                const seconds = questionTime % 60;
+                questionTimerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // 时间到，自动下一题
+                if (questionTime <= 0) {
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+        
+        // 重置题目计时器
+        function resetQuestionTimer() {
+            clearInterval(questionTimer);
+            questionTime = 3 * 60;
+            questionTimerDisplay.textContent = '03:00';
+            startQuestionTimer();
+        }
+        
+        // 更新进度条
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        // 下一题
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+                updateProgressBar();
+            } else {
+                // 已经是最后一题，计算分数
+                calculateScore();
+                showResult();
+            }
+        }
+        
+        // 计算分数
+        function calculateScore() {
+            score = 0;
+            userAnswers.forEach((answer, index) => {
+                const question = questions[index];
+                
+                if (answer !== null) {
+                    if (question.type === 'fill-blank') {
+                        // 填空题检查关键字
+                        if (answer.toLowerCase().includes(question.correctAnswer.toLowerCase())) {
+                            score++;
+                        }
+                    } else {
+                        // 选择题和判断题直接比较
+                        if (answer === question.correctAnswer) {
+                            score++;
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 显示结果
+        function showResult() {
+            // 停止所有计时器
+            clearInterval(totalTimer);
+            clearInterval(questionTimer);
+            
+            // 更新模态框内容
+            modalScore.textContent = `得分: ${score}/${questions.length}`;
+            
+            if (score >= 20) {
+                modalTitle.textContent = "恭喜通过考试！";
+                modalMessage.innerHTML = `
+                    <p>哇，不愧是你！这些题目居然全答对了！</p>
+                    <p>哈哈，看来是我小看你啦～</p>
+                    <p>欢迎回到十年前的B站，一起回顾那段时光吧！</p>
+                `;
+                bilibiliBtn.textContent = "回到10年前的哔哩哔哩";
+                bilibiliBtn.href = "https://www.bilibili.com/blackboard/bilibili2009-m.html";
+            } else {
+                modalTitle.textContent = "考试未通过";
+                modalMessage.innerHTML = `
+                    <p>就你这水平，还想回到10年前的b站，我看还是算了吧，</p>
+                    <p>你还是回到现在的b站吧</p>
+                `;
+                bilibiliBtn.textContent = "前往现在的哔哩哔哩";
+                bilibiliBtn.href = "https://m.bilibili.com/";
+            }
+            
+            // 显示模态框
+            resultModal.style.display = "flex";
+        }
+        
+        // 重新开始考试
+        function restartExam() {
+            // 重置状态
+            currentQuestionIndex = 0;
+            userAnswers = Array(questions.length).fill(null);
+            score = 0;
+            totalTime = 60 * 60;
+            questionTime = 3 * 60;
+            
+            // 重置UI
+            resultModal.style.display = "none";
+            questionsContainer.innerHTML = "";
+            
+            // 重新初始化
+            initExam();
+        }
+        
+        // 事件监听
+        nextBtn.addEventListener('click', nextQuestion);
+        restartBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            restartExam();
+        });
+        
+        // 初始化考试
+        initExam();
+    </script>
+</body>
+</html>

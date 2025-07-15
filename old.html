@@ -1,0 +1,1416 @@
+B站复古入站考试。
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哔哩哔哩复古入站考试 - 2010版</title>
+    <link rel="icon" href="https://www.bilibili.com/favicon.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --bili-blue: #00a1d6;
+            --bili-pink: #fb7299;
+            --bili-light-blue: #e5f6ff;
+            --bili-dark-blue: #0084b9;
+            --bili-red: #f56c6c;
+            --bili-green: #67c23a;
+            --bili-dark: #222226;
+            --bili-light-gray: #f4f4f4;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e6f7ff 0%, #ffe6f2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="5" fill="%2300a1d6" opacity="0.1"/></svg>');
+            background-size: 100px 100px;
+        }
+        
+        .vintage-container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #ddd;
+        }
+        
+        .vintage-banner {
+            background: linear-gradient(to right, var(--bili-blue), var(--bili-dark-blue));
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .vintage-banner h1 {
+            font-size: 36px;
+            margin: 10px 0 5px;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+        
+        .vintage-banner p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .vintage-banner::before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 50px;
+            height: 50px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="white" stroke-width="8" fill="none" stroke-dasharray="5,10"/></svg>');
+            opacity: 0.1;
+        }
+        
+        .vintage-banner::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            right: -15px;
+            width: 50px;
+            height: 50px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="white" stroke-width="8" fill="none" stroke-dasharray="5,10"/></svg>');
+            opacity: 0.1;
+            transform: rotate(45deg);
+        }
+        
+        .exam-body {
+            padding: 35px;
+        }
+        
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 35px;
+            background: var(--bili-light-blue);
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        
+        .timer-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+        
+        .timer-box span {
+            font-weight: normal;
+        }
+        
+        .timer-value {
+            font-size: 20px;
+            font-weight: bold;
+            min-width: 85px;
+            text-align: center;
+        }
+        
+        .question-container {
+            margin: 20px 0 40px;
+            padding: 0 10px;
+        }
+        
+        .question-counter {
+            color: var(--bili-blue);
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .question-text {
+            font-size: 22px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 4px solid var(--bili-blue);
+            background: var(--bili-light-gray);
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .options-container {
+            margin-top: 25px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            background: var(--bili-light-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .option:hover {
+            background: #e3f2fd;
+            border-color: var(--bili-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,161,214,0.15);
+        }
+        
+        .option.selected {
+            background: rgba(0, 161, 214, 0.15);
+            border-color: var(--bili-blue);
+            box-shadow: 0 0 0 3px rgba(0, 161, 214, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        .option-identifier {
+            background: var(--bili-blue);
+            color: white;
+            min-width: 36px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 18px;
+            font-weight: bold;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .option-content {
+            font-size: 18px;
+        }
+        
+        .fill-blank-container {
+            margin-top: 30px;
+        }
+        
+        .fill-blank-input {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .fill-blank-input:focus {
+            border-color: var(--bili-blue);
+            outline: none;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 0 3px rgba(0, 161, 214, 0.25);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        
+        .next-btn {
+            background: linear-gradient(to right, var(--bili-blue), var(--bili-dark-blue));
+            color: white;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            opacity: 0.7;
+            box-shadow: 0 5px 15px rgba(0,161,214,0.3);
+        }
+        
+        .next-btn.active {
+            opacity: 1;
+        }
+        
+        .next-btn.active:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(0,161,214,0.4);
+        }
+        
+        /* 结果弹窗 */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .result-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 550px;
+            border-radius: 20px;
+            overflow: hidden;
+            transform: translateY(70px);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            opacity: 0;
+        }
+        
+        .result-modal.active .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .modal-header {
+            background: linear-gradient(to right, var(--bili-pink), #e25a84);
+            color: white;
+            padding: 30px;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .modal-body {
+            padding: 40px 30px 30px;
+            text-align: center;
+        }
+        
+        .score-display {
+            font-size: 90px;
+            font-weight: bold;
+            color: var(--bili-blue);
+            margin: 10px 0 30px;
+            text-shadow: 0 5px 15px rgba(0, 161, 214, 0.3);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .score-display::after {
+            content: "分";
+            position: absolute;
+            right: -30px;
+            bottom: 15px;
+            font-size: 30px;
+            color: var(--bili-blue);
+        }
+        
+        .congratulations .score-display {
+            color: var(--bili-green);
+            text-shadow: 0 5px 15px rgba(103, 194, 58, 0.3);
+        }
+        
+        .congratulations .score-display::after {
+            color: var(--bili-green);
+        }
+        
+        .congratulations .modal-header {
+            background: linear-gradient(to right, var(--bili-green), #5caa3a);
+        }
+        
+        .score-message {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+        
+        .critical-message {
+            font-size: 24px;
+            color: var(--bili-red);
+            font-weight: bold;
+            margin: 30px 0;
+            line-height: 1.7;
+        }
+        
+        .modal-actions {
+            padding: 0 30px 40px;
+            text-align: center;
+        }
+        
+        .modal-button {
+            background: linear-gradient(to right, var(--bili-blue), var(--bili-dark-blue));
+            color: white;
+            padding: 16px 50px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0,161,214,0.3);
+        }
+        
+        .modal-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,161,214,0.4);
+        }
+        
+        .welcome-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 键盘提示 */
+        .keyboard-hint {
+            font-size: 16px;
+            color: #777;
+            margin-top: 25px;
+            text-align: center;
+            font-style: italic;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        /* 超时警告 */
+        .time-warning {
+            color: var(--bili-red);
+            font-weight: bold;
+            animation: blink 1.2s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        
+        @media (max-width: 600px) {
+            .vintage-container {
+                margin: 15px;
+            }
+            
+            .vintage-banner h1 {
+                font-size: 28px;
+            }
+            
+            .question-text {
+                font-size: 19px;
+            }
+            
+            .option-content {
+                font-size: 16px;
+            }
+            
+            .exam-body {
+                padding: 25px 20px;
+            }
+            
+            .time-info {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="vintage-container">
+        <div class="vintage-banner">
+            <h1>哔哩哔哩入站会员考试</h1>
+            <p>2010复古版 • 测试你的二次元浓度</p>
+        </div>
+        
+        <div class="exam-body">
+            <div class="time-info">
+                <div class="timer-box">
+                    <span>本题时间:</span>
+                    <div id="questionTimer" class="timer-value time-warning">05:00</div>
+                </div>
+                <div class="timer-box">
+                    <span>总剩余:</span>
+                    <div id="totalTimer" class="timer-value">02:00:00</div>
+                </div>
+            </div>
+            
+            <div class="question-container" id="questionContainer">
+                <!-- 题目内容动态加载 -->
+            </div>
+            
+            <div class="action-buttons">
+                <button id="nextButton" class="next-btn">
+                    下一题
+                </button>
+            </div>
+            
+            <div class="keyboard-hint">
+                提示: 使用 ↑ ↓ 方向键选择选项，按 Enter 确认进入下一题
+            </div>
+        </div>
+    </div>
+    
+    <!-- 结果弹窗 -->
+    <div class="result-modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-header">测试结束</div>
+            <div class="modal-body">
+                <div class="score-display" id="finalScore">0</div>
+                <div class="score-message" id="scoreMessage"></div>
+                <div class="modal-actions">
+                    <button class="modal-button" id="modalActionButton">我知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 超时弹窗 -->
+    <div class="result-modal" id="timeoutModal">
+        <div class="modal-content">
+            <div class="modal-header">时间到</div>
+            <div class="modal-body">
+                <div class="critical-message">
+                    你该不会连这些题目都不会吧？还是说你在拖延时间？
+                </div>
+                <div class="score-message">
+                    <p>考试时间已结束，你的二次元浓度测试未完成</p>
+                    <p>你只回答了 <span id="answeredCount">0</span> 题，获得了 <span id="partialScore">0</span> 分</p>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-button" id="timeoutActionButton">返回现代B站</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 完整的60道考试题目
+        const questions = [
+            {
+                type: "choice",
+                question: "B站是一个什么样的网站？",
+                options: [
+                    "福利网站",
+                    "深夜网站",
+                    "学习网站",
+                    "弹幕视频分享网站"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "弹幕文化起源的始祖网站是？",
+                answer: "NicoNico"
+            },
+            {
+                type: "choice",
+                question: "以下哪个是哔哩哔哩的创始人？",
+                options: [
+                    "徐逸",
+                    "李彦宏",
+                    "马云",
+                    "张一鸣"
+                ],
+                answer: 0
+            },
+            {
+                type: "choice",
+                question: "以下哪项不属于B站三大分区？",
+                options: [
+                    "动画区",
+                    "音乐区",
+                    "科技区",
+                    "鬼畜区"
+                ],
+                answer: 2
+            },
+            {
+                type: "choice",
+                question: "B站首次实现盈利的年份是？",
+                options: [
+                    "2015年",
+                    "2017年",
+                    "2018年",
+                    "2020年"
+                ],
+                answer: 1
+            },
+            {
+                type: "choice",
+                question: "以下哪位不是B站虚拟艺人？",
+                options: [
+                    "洛天依",
+                    "泠鸢yousa",
+                    "嘉然今天吃什么",
+                    "初音未来"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "B站2010年成立的域名是？",
+                answer: "bilibili.us"
+            },
+            {
+                type: "choice",
+                question: "B站的年度弹幕不包括：",
+                options: [
+                    "爷青回",
+                    "破防了",
+                    "前方高能",
+                    "永远的神"
+                ],
+                answer: 2
+            },
+            {
+                type: "fill",
+                question: "初代目B站娘叫什么名字？",
+                answer: "22娘"
+            },
+            {
+                type: "choice",
+                question: "以下哪部作品被誉为二次元圣经？",
+                options: [
+                    "进击的巨人",
+                    "新世纪福音战士",
+                    "CLANNAD",
+                    "钢之炼金术师"
+                ],
+                answer: 1
+            },
+            {
+                type: "choice",
+                question: "B站的弹幕系统中，白色弹幕表示：",
+                options: [
+                    "普通弹幕",
+                    "会员弹幕",
+                    "特殊弹幕",
+                    "系统公告"
+                ],
+                answer: 0
+            },
+            {
+                type: "fill",
+                question: "ACG文化中的G代表什么意思？",
+                answer: "Game"
+            },
+            {
+                type: "choice",
+                question: "下列哪个不是B站的分站？",
+                options: [
+                    "哔哩哔哩动画",
+                    "哔哩哔哩漫画",
+                    "哔哩哔哩音乐",
+                    "哔哩哔哩影视"
+                ],
+                answer: 3
+            },
+            {
+                type: "choice",
+                question: "以下哪项不是B站大会员的功能？",
+                options: [
+                    "发送彩色弹幕",
+                    "观看会员专享内容",
+                    "无广告",
+                    "评论优先展示"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "弹幕用语'awsl'是什么意思？",
+                answer: "啊我死了"
+            },
+            {
+                type: "choice",
+                question: "以下哪个不是B站鬼畜区的常见人物？",
+                options: [
+                    "诸葛村夫",
+                    "波澜哥",
+                    "金坷垃",
+                    "孙悟空"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "弹幕'空降成功'表示用户到达了第几分钟？",
+                answer: "3"
+            },
+            {
+                type: "choice",
+                question: "以下哪部动画被称为'强国源泉'？",
+                options: [
+                    "轻音少女",
+                    "星际牛仔",
+                    "少女与战车",
+                    "LoveLive!"
+                ],
+                answer: 2
+            },
+            {
+                type: "choice",
+                question: "以下哪个弹幕是B站禁语？",
+                options: [
+                    "233",
+                    "打卡",
+                    "白嫖",
+                    "引战"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "弹幕'下次一定'的实际意思是什么？",
+                answer: "白嫖"
+            },
+            {
+                type: "choice",
+                question: "B站用户等级最高是多少？",
+                options: [
+                    "4级",
+                    "5级",
+                    "6级",
+                    "7级"
+                ],
+                answer: 2
+            },
+            {
+                type: "choice",
+                question: "以下哪位不是B站知名游戏主播？",
+                options: [
+                    "敖厂长",
+                    "老番茄",
+                    "逍遥散人",
+                    "LexBurner"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "B站UP主投稿视频时，1080P视频需要什么级别的会员？",
+                answer: "大会员"
+            },
+            {
+                type: "choice",
+                question: "以下哪个梗不是来自B站鬼畜区？",
+                options: [
+                    "金坷垃",
+                    "元首的愤怒",
+                    "诸葛孔明",
+                    "逮虾户"
+                ],
+                answer: 3
+            },
+            {
+                type: "choice",
+                question: "以下哪个奖项不是B站每年举办的？",
+                options: [
+                    "百大UP主",
+                    "动画人气奖",
+                    "金遥杆奖",
+                    "音乐大赏"
+                ],
+                answer: 2
+            },
+            {
+                type: "fill",
+                question: "B站上市的时间是哪一年？",
+                answer: "2018"
+            },
+            {
+                type: "choice",
+                question: "以下哪个是B站官方推出的动画？",
+                options: [
+                    "天官赐福",
+                    "魔道祖师",
+                    "全职高手",
+                    "灵笼"
+                ],
+                answer: 3
+            },
+            {
+                type: "choice",
+                question: "B站的'一键三连'不包括以下哪个操作？",
+                options: [
+                    "点赞",
+                    "投币",
+                    "收藏",
+                    "转发"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "B站会员等级提升主要依靠什么？",
+                answer: "经验值"
+            },
+            {
+                type: "choice",
+                question: "以下哪个不属于B站的官方周边？",
+                options: [
+                    "2233娘手办",
+                    "小电视机器人",
+                    "哔哩哔哩薯片",
+                    "大会员限定徽章"
+                ],
+                answer: 2
+            },
+            {
+                type: "choice",
+                question: "以下哪个数字在B站弹幕中表示大笑？",
+                options: [
+                    "666",
+                    "233",
+                    "555",
+                    "888"
+                ],
+                answer: 1
+            },
+            {
+                type: "fill",
+                question: "B站用户如何称呼自己的粉丝？",
+                answer: "粉丝"
+            },
+            {
+                type: "choice",
+                question: "以下哪种视频类型最适合发'前方高能'？",
+                options: [
+                    "学习教程",
+                    "美食烹饪",
+                    "恐怖游戏",
+                    "旅游vlog"
+                ],
+                answer: 2
+            },
+            {
+                type: "choice",
+                question: "以下哪个不是B站的拜年纪元素？",
+                options: [
+                    "年度总结",
+                    "原创歌舞",
+                    "相声小品",
+                    "游戏直播"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "弹幕'意大利炮'出自哪部电视剧？",
+                answer: "亮剑"
+            },
+            {
+                type: "choice",
+                question: "以下哪个梗与B站无关？",
+                options: [
+                    "重要的事情说三遍",
+                    "雨女无瓜",
+                    "奥里给",
+                    "are you good 马来西亚"
+                ],
+                answer: 1
+            },
+            {
+                type: "choice",
+                question: "以下哪部动画不是京阿尼制作？",
+                options: [
+                    "凉宫春日的忧郁",
+                    "轻音少女",
+                    "CLANNAD",
+                    "命运石之门"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "弹幕'你币没了'的完整版说法是？",
+                answer: "你硬币没了"
+            },
+            {
+                type: "choice",
+                question: "以下哪个不是B站用户对广告的调侃？",
+                options: [
+                    "猝不及防",
+                    "无孔不入",
+                    "大会员免广告",
+                    "我缺这点流量吗"
+                ],
+                answer: 2
+            },
+            {
+                type: "choice",
+                question: "以下哪位UP主属于生活区？",
+                options: [
+                    "老番茄",
+                    "何同学",
+                    "泠鸢yousa",
+                    "中国BOY"
+                ],
+                answer: 1
+            },
+            {
+                type: "fill",
+                question: "B站第一个破千万粉丝的UP主是谁？",
+                answer: "老番茄"
+            },
+            {
+                type: "choice",
+                question: "以下哪个不是B站的社交功能？",
+                options: [
+                    "动态",
+                    "专栏",
+                    "聊天室",
+                    "直播"
+                ],
+                answer: 2
+            },
+            {
+                type: "choice",
+                question: "以下哪首歌曲被称为'万恶之源'？",
+                options: [
+                    "极乐净土",
+                    "千本樱",
+                    "禁忌的边界线",
+                    "威风堂堂"
+                ],
+                answer: 0
+            },
+            {
+                type: "fill",
+                question: "弹幕'爷青回'是什么意思？",
+                answer: "爷的青春回来了"
+            },
+            {
+                type: "choice",
+                question: "以下哪个不是B站的会员类型？",
+                options: [
+                    "普通会员",
+                    "年度大会员",
+                    "超级会员",
+                    "VIP会员"
+                ],
+                answer: 2
+            },
+            {
+                type: "choice",
+                question: "以下哪部番剧有'胃痛'情节？",
+                options: [
+                    "白色相簿",
+                    "刀剑神域",
+                    "Re:从零开始的异世界生活",
+                    "鬼灭之刃"
+                ],
+                answer: 0
+            },
+            {
+                type: "fill",
+                question: "B站2020年推出的竖屏内容平台名称是？",
+                answer: "轻视频"
+            },
+            {
+                type: "choice",
+                question: "以下哪个不是B站舞见？",
+                options: [
+                    "咬人猫",
+                    "楽小漫",
+                    "紫颜",
+                    "泠鸢yousa"
+                ],
+                answer: 3
+            },
+            {
+                type: "choice",
+                question: "以下哪个区的内容适合全家人观看？",
+                options: [
+                    "舞蹈区",
+                    "生活区",
+                    "鬼畜区",
+                    "动画区"
+                ],
+                answer: 1
+            },
+            {
+                type: "fill",
+                question: "B站年度大型晚会叫什么？",
+                answer: "最美的夜"
+            },
+            {
+                type: "choice",
+                question: "以下哪个词不是B站常见的用户等级？",
+                options: [
+                    "萌新",
+                    "小司机",
+                    "带会员",
+                    "大佬"
+                ],
+                answer: 1
+            },
+            {
+                type: "choice",
+                question: "以下哪项不是B站硬币的主要用途？",
+                options: [
+                    "赞赏视频",
+                    "升级会员",
+                    "购买装扮",
+                    "抽奖"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "B站成立年份是哪一年？",
+                answer: "2009"
+            },
+            {
+                type: "choice",
+                question: "以下哪位不是虚拟主播团体？",
+                options: [
+                    "A-SOUL",
+                    "四禧丸子",
+                    "彩虹社",
+                    "花泽香菜"
+                ],
+                answer: 3
+            },
+            {
+                type: "choice",
+                question: "以下哪个术语与MAD制作无关？",
+                options: [
+                    "调色",
+                    "卡点",
+                    "转场",
+                    "加贺"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "弹幕'完播撒花'表示什么？",
+                answer: "视频播放完毕"
+            },
+            {
+                type: "choice",
+                question: "以下哪个动画人物头发是蓝色的？",
+                options: [
+                    "凉宫春日",
+                    "亚丝娜",
+                    "小鸟游六花",
+                    "御坂美琴"
+                ],
+                answer: 0
+            },
+            {
+                type: "choice",
+                question: "以下哪个不是游戏术语？",
+                options: [
+                    "OT",
+                    "gank",
+                    "KPOP",
+                    "AFK"
+                ],
+                answer: 2
+            },
+            {
+                type: "fill",
+                question: "B站用户投稿视频大小不能超过多少？",
+                answer: "8GB"
+            },
+            {
+                type: "choice",
+                question: "以下哪个不是B站直播类型？",
+                options: [
+                    "游戏直播",
+                    "才艺直播",
+                    "带货直播",
+                    "课堂直播"
+                ],
+                answer: 3
+            },
+            {
+                type: "choice",
+                question: "以下哪部动画被称为'宇宙神作'？",
+                options: [
+                    "进击的巨人",
+                    "刀剑神域",
+                    "魔法禁书目录",
+                    "龙与虎"
+                ],
+                answer: 2
+            },
+            {
+                type: "fill",
+                question: "B站用户对高质量内容常见的表示是？",
+                answer: "三连"
+            }
+        ];
+
+        // 全局变量
+        let currentQuestionIndex = 0;
+        let userAnswers = Array(questions.length).fill(null);
+        let totalTime = 7200; // 2小时(秒)
+        let questionTime = 300; // 5分钟(秒)
+        let totalTimer, questionTimer;
+        let score = 0;
+
+        // DOM元素
+        const questionTimerDisplay = document.getElementById('questionTimer');
+        const totalTimerDisplay = document.getElementById('totalTimer');
+        const questionContainer = document.getElementById('questionContainer');
+        const nextButton = document.getElementById('nextButton');
+        const resultModal = document.getElementById('resultModal');
+        const finalScore = document.getElementById('finalScore');
+        const scoreMessage = document.getElementById('scoreMessage');
+        const modalActionButton = document.getElementById('modalActionButton');
+        const timeoutModal = document.getElementById('timeoutModal');
+        const timeoutActionButton = document.getElementById('timeoutActionButton');
+        const answeredCount = document.getElementById('answeredCount');
+        const partialScore = document.getElementById('partialScore');
+
+        // 初始化考试
+        function initExam() {
+            // 启动计时器
+            startTimers();
+            
+            // 显示第一题
+            showQuestion(currentQuestionIndex);
+            
+            // 事件监听
+            nextButton.addEventListener('click', moveToNextQuestion);
+            modalActionButton.addEventListener('click', handleResultAction);
+            timeoutActionButton.addEventListener('click', redirectToModernBilibili);
+            
+            // 键盘事件监听
+            document.addEventListener('keydown', handleKeyNavigation);
+        }
+
+        // 键盘导航支持
+        function handleKeyNavigation(e) {
+            if (resultModal.classList.contains('active') || timeoutModal.classList.contains('active')) return;
+            
+            const question = questions[currentQuestionIndex];
+            
+            if (question.type === 'choice') {
+                const options = document.querySelectorAll('.option');
+                
+                // 上下箭头选择
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const currentIndex = userAnswers[currentQuestionIndex] || -1;
+                    let nextIndex;
+                    
+                    if (e.key === 'ArrowUp') {
+                        nextIndex = currentIndex > 0 ? currentIndex - 1 : options.length - 1;
+                    } else {
+                        nextIndex = (currentIndex + 1) % options.length;
+                    }
+                    
+                    selectOption(nextIndex);
+                    
+                    // 聚焦到选项
+                    if (options[nextIndex]) {
+                        options[nextIndex].focus();
+                    }
+                } 
+                // 字母键直接选择
+                else if (e.key.length === 1 && e.key.match(/[a-dA-D]/)) {
+                    const index = e.key.toLowerCase().charCodeAt(0) - 'a'.charCodeAt(0);
+                    if (index >= 0 && index < 4) {
+                        selectOption(index);
+                    }
+                }
+            }
+            
+            // 回车键提交
+            if (e.key === 'Enter' && nextButton.classList.contains('active')) {
+                moveToNextQuestion();
+            }
+        }
+
+        // 启动计时器
+        function startTimers() {
+            // 总计时器
+            totalTimer = setInterval(() => {
+                totalTime--;
+                updateTotalTimerDisplay();
+                
+                if (totalTime <= 0) {
+                    endExamDueToTimeout();
+                }
+            }, 1000);
+            
+            // 题目计时器
+            questionTimer = setInterval(() => {
+                questionTime--;
+                updateQuestionTimerDisplay();
+                
+                if (questionTime <= 0) {
+                    moveToNextQuestion();
+                } else if (questionTime < 30) {
+                    questionTimerDisplay.classList.add('time-warning');
+                } else {
+                    questionTimerDisplay.classList.remove('time-warning');
+                }
+            }, 1000);
+            
+            updateTotalTimerDisplay();
+            updateQuestionTimerDisplay();
+        }
+
+        // 更新计时器显示
+        function updateQuestionTimerDisplay() {
+            const min = Math.floor(questionTime / 60).toString().padStart(2, '0');
+            const sec = (questionTime % 60).toString().padStart(2, '0');
+            questionTimerDisplay.textContent = `${min}:${sec}`;
+        }
+        
+        function updateTotalTimerDisplay() {
+            const hour = Math.floor(totalTime / 3600).toString().padStart(2, '0');
+            const min = Math.floor((totalTime % 3600) / 60).toString().padStart(2, '0');
+            const sec = (totalTime % 60).toString().padStart(2, '0');
+            totalTimerDisplay.textContent = `${hour}:${min}:${sec}`;
+        }
+
+        // 显示题目
+        function showQuestion(index) {
+            const question = questions[index];
+            
+            // 重置题目时间
+            clearInterval(questionTimer);
+            questionTime = 300;
+            updateQuestionTimerDisplay();
+            questionTimerDisplay.classList.remove('time-warning');
+            
+            // 启动题目计时器
+            questionTimer = setInterval(() => {
+                questionTime--;
+                updateQuestionTimerDisplay();
+                
+                if (questionTime <= 0) {
+                    clearInterval(questionTimer);
+                    moveToNextQuestion();
+                } else if (questionTime < 30) {
+                    questionTimerDisplay.classList.add('time-warning');
+                }
+            }, 1000);
+            
+            // 构建题目HTML
+            let questionHTML = `
+                <div class="question-section">
+                    <div class="question-counter">题目 ${index + 1}/${questions.length}</div>
+                    <div class="question-text">${question.question}</div>
+            `;
+            
+            if (question.type === 'choice') {
+                questionHTML += `
+                    <div class="options-container">
+                        ${question.options.map((opt, i) => `
+                            <div class="option" onclick="selectOption(${i})">
+                                <div class="option-identifier">${String.fromCharCode(65 + i)}</div>
+                                <div class="option-content">${opt}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                questionHTML += `
+                    <div class="fill-blank-container">
+                        <input type="text" class="fill-blank-input" 
+                               placeholder="在此输入答案..." 
+                               value="${userAnswers[index] || ''}"
+                               oninput="handleFillInput(this.value)">
+                    </div>
+                `;
+            }
+            
+            questionHTML += `</div>`;
+            questionContainer.innerHTML = questionHTML;
+            
+            // 设置下一个按钮状态
+            nextButton.classList.remove('active');
+            if (userAnswers[index] !== null) {
+                nextButton.classList.add('active');
+            }
+            
+            // 如果是填空题且已有答案，设置输入框状态
+            if (question.type === 'fill' && userAnswers[index]) {
+                document.querySelector('.fill-blank-input').value = userAnswers[index];
+            }
+            
+            // 选中选项
+            if (question.type === 'choice' && userAnswers[index] !== null) {
+                const options = document.querySelectorAll('.option');
+                if (options[userAnswers[index]]) {
+                    options[userAnswers[index]].classList.add('selected');
+                }
+            }
+        }
+
+        // 选择选项
+        function selectOption(index) {
+            userAnswers[currentQuestionIndex] = index;
+            
+            // 更新UI
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, i) => {
+                opt.classList.toggle('selected', i === index);
+            });
+            
+            // 激活按钮
+            nextButton.classList.add('active');
+        }
+
+        // 处理填空输入
+        function handleFillInput(value) {
+            userAnswers[currentQuestionIndex] = value.trim();
+            nextButton.classList.toggle('active', value.trim() !== '');
+        }
+
+        // 进入下一题
+        function moveToNextQuestion() {
+            // 检查当前题目是否作答
+            if (userAnswers[currentQuestionIndex] === null && questionTime > 0) {
+                return;
+            }
+            
+            // 进入下一题或结束考试
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < questions.length) {
+                showQuestion(currentQuestionIndex);
+            } else {
+                endExam();
+            }
+        }
+
+        // 结束考试（超时）
+        function endExamDueToTimeout() {
+            clearInterval(totalTimer);
+            clearInterval(questionTimer);
+            
+            // 计算部分分数
+            let answered = 0;
+            let partial = 0;
+            
+            questions.forEach((q, i) => {
+                if (userAnswers[i] !== null) {
+                    answered++;
+                    if ((q.type === 'choice' && userAnswers[i] === q.answer) || 
+                        (q.type === 'fill' && String(userAnswers[i]).toLowerCase() === q.answer.toLowerCase())) {
+                        partial++;
+                    }
+                }
+            });
+            
+            answeredCount.textContent = answered;
+            partialScore.textContent = partial;
+            
+            timeoutModal.classList.add('active');
+        }
+
+        // 结束考试（正常完成）
+        function endExam() {
+            clearInterval(totalTimer);
+            clearInterval(questionTimer);
+            
+            // 计算分数
+            calculateScore();
+            
+            // 显示结果
+            showResult();
+        }
+
+        // 计算分数
+        function calculateScore() {
+            score = 0;
+            
+            questions.forEach((q, i) => {
+                if (userAnswers[i] === null) return;
+                
+                if (q.type === 'choice' && userAnswers[i] === q.answer) {
+                    score += 1;
+                } else if (q.type === 'fill') {
+                    if (String(userAnswers[i]).toLowerCase() === q.answer.toLowerCase()) {
+                        score += 1;
+                    }
+                }
+            });
+        }
+
+        // 显示结果
+        function showResult() {
+            finalScore.textContent = score;
+            
+            if (score >= 60) {
+                resultModal.classList.add('congratulations');
+                scoreMessage.innerHTML = `
+                    <p>恭喜你通过了B站复古入站考试！</p>
+                    <p>你的二次元浓度得分为：${score}</p>
+                    <p>欢迎回到10年前的B站！</p>
+                `;
+                modalActionButton.textContent = "体验10年前的B站";
+                finalScore.classList.add('welcome-animation');
+            } else {
+                resultModal.classList.remove('congratulations');
+                scoreMessage.innerHTML = `
+                    <div class="critical-message">
+                        就这？连60分都没到就想进B站？
+                    </div>
+                    <p>你的分数为${score}分，未达到60分要求</p>
+                    <p>你该不会连这些都不会吧？二次元浓度也太低了吧！</p>
+                `;
+                modalActionButton.textContent = "返回现代B站";
+            }
+            
+            resultModal.classList.add('active');
+        }
+
+        // 处理结果操作
+        function handleResultAction() {
+            if (score >= 60) {
+                window.location.href = "https://www.bilibili.com/blackboard/bilibili2009-m.html";
+            } else {
+                redirectToModernBilibili();
+            }
+        }
+        
+        function redirectToModernBilibili() {
+            window.location.href = "https://m.bilibili.com/";
+        }
+
+        // 启动考试系统
+        window.onload = function() {
+            // 暴露函数给全局作用域
+            window.selectOption = selectOption;
+            window.handleFillInput = handleFillInput;
+            
+            initExam();
+        }
+    </script>
+</body>
+</html>

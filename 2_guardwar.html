@@ -1,0 +1,901 @@
+入站考试。<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二次元核心机密考卷 - 防AI渗透专供</title>
+    <link rel="icon" href="https://static.hdslb.com/images/favicon.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --bili-pink: #FF8EB3;
+            --bili-blue: #00A1D6;
+            --bili-dark-blue: #0084B9;
+            --bili-light-gray: #F1F2F3;
+            --bili-gray: #E3E5E7;
+            --bili-dark: #222226;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f0ff 0%, #e3eeff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .exam-container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--bili-gray);
+        }
+        
+        /* B站风格头部 */
+        .exam-header {
+            background: linear-gradient(to right, var(--bili-blue), var(--bili-dark-blue));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .exam-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .exam-header p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        /* 计时器 */
+        .timer-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .timer-container i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .timer {
+            color: #ffde6a;
+            font-weight: bold;
+        }
+        
+        /* 题目区域 */
+        .question-container {
+            padding: 30px;
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--bili-gray);
+        }
+        
+        .question-number {
+            background: var(--bili-pink);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .question-title {
+            font-size: 20px;
+            color: var(--bili-dark);
+            line-height: 1.5;
+        }
+        
+        /* 选择题选项 */
+        .options-container {
+            margin-top: 20px;
+        }
+        
+        .option {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 2px solid var(--bili-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bili-light-gray);
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .option:hover {
+            background: #e3f2fd;
+            border-color: var(--bili-blue);
+        }
+        
+        .option.selected {
+            background: rgba(0, 161, 214, 0.1);
+            border-color: var(--bili-blue);
+            box-shadow: 0 0 0 2px rgba(0, 161, 214, 0.3);
+        }
+        
+        .option-identifier {
+            background: var(--bili-blue);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        
+        /* 填空题样式 */
+        .fill-blank-container {
+            margin-top: 25px;
+        }
+        
+        .fill-blank {
+            padding: 15px 0;
+        }
+        
+        .fill-blank-input {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--bili-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .fill-blank-input:focus {
+            border-color: var(--bili-blue);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 161, 214, 0.3);
+        }
+        
+        /* 判断题选项 */
+        .judge-options {
+            display: flex;
+            margin-top: 20px;
+            gap: 15px;
+        }
+        
+        .judge-option {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            border: 2px solid var(--bili-gray);
+            background: var(--bili-light-gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .judge-option:hover {
+            background: #e3f2fd;
+        }
+        
+        .judge-option.selected {
+            background: rgba(0, 161, 214, 0.1);
+            border-color: var(--bili-blue);
+            box-shadow: 0 0 0 2px rgba(0, 161, 214, 0.3);
+        }
+        
+        .judge-option.true.selected {
+            background: rgba(76, 175, 80, 0.1);
+            border-color: #4CAF50;
+        }
+        
+        .judge-option.false.selected {
+            background: rgba(244, 67, 54, 0.1);
+            border-color: #F44336;
+        }
+        
+        /* 底部按钮 */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--bili-gray);
+        }
+        
+        .nav-button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        #prevButton {
+            background: #e0e0e0;
+            color: #666;
+        }
+        
+        #prevButton:hover {
+            background: #d0d0d0;
+        }
+        
+        #nextButton {
+            background: var(--bili-blue);
+            color: white;
+            margin-left: auto;
+        }
+        
+        #nextButton:hover {
+            background: var(--bili-dark-blue);
+            box-shadow: 0 4px 12px rgba(0, 161, 214, 0.4);
+        }
+        
+        #submitButton {
+            background: var(--bili-pink);
+            color: white;
+            width: 100%;
+        }
+        
+        #submitButton:hover {
+            background: #ff7ba9;
+            box-shadow: 0 4px 12px rgba(255, 142, 179, 0.4);
+        }
+        
+        /* 结果页面样式 */
+        .result-container {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .result-title {
+            font-size: 32px;
+            color: var(--bili-dark);
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .score-container {
+            font-size: 120px;
+            font-weight: bold;
+            color: var(--bili-blue);
+            margin: 30px 0;
+            text-shadow: 0 4px 12px rgba(0, 161, 214, 0.4);
+        }
+        
+        .result-message {
+            font-size: 20px;
+            color: var(--bili-dark);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        /* 嘲讽弹窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+            text-align: center;
+            animation: modalAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes modalAppear {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .modal-header {
+            background: var(--bili-pink);
+            color: white;
+            padding: 25px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .modal-body {
+            padding: 30px;
+        }
+        
+        .modal-body img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--bili-pink);
+        }
+        
+        .modal-message {
+            font-size: 18px;
+            color: var(--bili-dark);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .modal-actions {
+            padding: 0 30px 30px;
+        }
+        
+        .modal-button {
+            background: var(--bili-blue);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .modal-button:hover {
+            background: var(--bili-dark-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 161, 214, 0.4);
+        }
+        
+        /* 提示信息 */
+        .hint {
+            font-size: 14px;
+            color: #999;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question-wrapper {
+            animation: fadeIn 0.4s forwards;
+        }
+        
+        /* 页面初始状态 */
+        .welcome-screen {
+            text-align: center;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .welcome-title {
+            font-size: 36px;
+            color: var(--bili-blue);
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .welcome-subtitle {
+            font-size: 20px;
+            color: var(--bili-dark);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .start-button {
+            background: var(--bili-pink);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        
+        .start-button:hover {
+            background: #ff7ba9;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 142, 179, 0.4);
+        }
+        
+        .warning-box {
+            background: rgba(255, 238, 242, 0.8);
+            border-left: 4px solid var(--bili-pink);
+            padding: 15px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* 倒计时结束样式 */
+        .time-out-message {
+            font-size: 20px;
+            color: #F44336;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="exam-container">
+        <!-- 欢迎界面 -->
+        <div id="welcomeScreen" class="welcome-screen">
+            <div class="exam-header">
+                <h1>二次元核心机密考卷</h1>
+                <p>防AI渗透专供</p>
+            </div>
+            
+            <div style="padding: 30px">
+                <h2 class="welcome-title">二次元圣域守卫挑战</h2>
+                <div class="warning-box">
+                    <p><strong>警告：</strong> 本测试包含大量语义陷阱，专为识别真正的二次元爱好者而设计</p>
+                </div>
+                
+                <p class="welcome-subtitle">
+                    本试卷包含10道精心设计的题目，涵盖二次元知识、冷门细节和语义陷阱。<br>
+                    你需要在<span style="color: var(--bili-blue); font-weight: bold">10分钟</span>内完成答题，分数达到60分以上才能证明你的二次元之魂！
+                </p>
+                
+                <div>
+                    <button id="startButton" class="start-button">
+                        开启挑战
+                    </button>
+                </div>
+                
+                <p class="hint" style="margin-top: 40px;">
+                    *测试结束后，你的分数将决定你是否能进入B站的二次元圣地*
+                </p>
+            </div>
+        </div>
+        
+        <!-- 答题界面 -->
+        <div id="examScreen" style="display: none">
+            <div class="exam-header">
+                <h1>二次元核心机密考卷</h1>
+                <p>防AI渗透专供</p>
+                <div class="timer-container">
+                    <span>⏱</span>
+                    <div class="timer">10:00</div>
+                </div>
+            </div>
+            
+            <div id="questionContainer" class="question-container">
+                <!-- 题目会通过JS动态渲染 -->
+            </div>
+        </div>
+        
+        <!-- 结果展示界面 -->
+        <div id="resultScreen" style="display: none">
+            <div class="result-container">
+                <h1 class="result-title">测试结果</h1>
+                
+                <div id="scoreDisplay" class="score-container">0</div>
+                
+                <div id="resultMessage" class="result-message">
+                    <!-- 结果消息会通过JS动态渲染 -->
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="restartButton" class="modal-button">重新挑战</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 嘲讽弹窗 -->
+    <div id="mockModal" class="modal" style="display: none">
+        <div class="modal-content">
+            <div class="modal-header">二次元纯度测试失败</div>
+            
+            <div class="modal-body">
+                <p class="modal-message">
+                    你该不会连这些问题都不会吧？<br>
+                    连最基本的概念理解都有问题...<br>
+                    用AI来答题也太明显了 🤖
+                </p>
+                
+                <div class="modal-actions">
+                    <button id="mockButton" class="modal-button">我是真二次元！让我重试</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 超时弹窗 -->
+    <div id="timeoutModal" class="modal" style="display: none">
+        <div class="modal-content">
+            <div class="modal-header">时间结束</div>
+            
+            <div class="modal-body">
+                <p class="modal-message">
+                    只有十分钟都答不完题？<br>
+                    这种速度也好意思自称二次元？<br>
+                    连萌新都比不上啊...
+                </p>
+                
+                <div class="time-out-message">⏱ 倒计时结束，自动提交试卷</div>
+                
+                <div class="modal-actions">
+                    <button id="timeoutButton" class="modal-button">再给我一次机会</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 题目数据
+        const questions = [
+            {
+                type: "choice",
+                question: "在《AIR》Summer篇游戏的“神社参道”场景中，当神尾观铃第一次向国崎往人展示她“不会被风卷走”的特殊物品时，该物品当时的具体状态是？",
+                hint: "提示：与后续剧情该物品的象征意义不同",
+                options: [
+                    "被一层透明的保鲜膜小心包裹着",
+                    "其中一根支撑骨架出现了轻微的裂纹",
+                    "被夹在一本《鸟类图鉴》的扉页里",
+                    "自然地斜插在她牛仔裤后口袋里"
+                ],
+                answer: 3
+            },
+            {
+                type: "choice",
+                question: "日本独立音乐界有一位以“纯净声线”著称的女性歌手。已知条件如下：1. 她从未改变过在正式录音室录音时的一项独特习惯。2. 这项习惯在视觉上使其区别于绝大多数使用“STUDIO A”的歌手。3. 有乐评人错误地将此习惯归结为“对某种自然现象的执念模仿”。请问这位歌手是？",
+                options: [
+                    "坂本真绫",
+                    "手嶌葵",
+                    "元千岁",
+                    "KOKIA"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "在《AIR》游戏Summer篇结尾，神尾观铃在巨大勇气下说出的关键台词是（按官方中文版文本）：“往人，我可以________了！”。要求填入缺失的关键动作动词。",
+                hint: "警惕！许多玩家因为主题暗示而答错这个问题",
+                answer: "走"
+            },
+            {
+                type: "fill",
+                question: "在动画作画领域，指代“为修正原画动态不连贯问题，由资深原画师在律表(时间轴)上添加的、用于指示中间张(動画)绘制要点的特殊标记”的专业术语，其日语罗马音写法是？",
+                hint: "非“作画修正”或“仕上げ指示”",
+                answer: "sashi-iri"
+            },
+            {
+                type: "judge",
+                question: "在京都动画制作的《AIR》TV版中，神尾观铃每次喝她最爱的“粘稠状果汁饮料”时，都会将吸管精确地插在包装盒正中央顶部的左侧小孔内。",
+                answer: false
+            },
+            {
+                type: "choice",
+                question: "在《CLANNAD ~After Story~》Blu-ray Box特典动画“另一个世界：杏篇”的结尾镜头中，放在冈崎朋也公寓窗台上象征性的小物件是什么？",
+                hint: "提示：并非剧中常见的光玉或团子",
+                options: [
+                    "一个褪色的红色发夹",
+                    "一个盛着清水的透明玻璃杯",
+                    "一小盆叶片饱满的绿色植物",
+                    "一支抽了一半、被按灭的白色香烟（烟灰缸旁）"
+                ],
+                answer: 3
+            },
+            {
+                type: "fill",
+                question: "Key社作品《Kanon》的经典BGM“風の辿り着く場所”的“早期未命名钢琴Demo稿”中，有一段被临时标记为“此处需填入女声哼唱：とおく、はるか____のほうへ”。空白处应填入的日文单词（与最终歌词不同）是？",
+                hint: "提示：与“そら/sora”同音的某名词",
+                answer: "宙"
+            },
+            {
+                type: "judge",
+                question: "作曲家久石让在录制《千与千寻》主题曲《いつも何度でも》的初版管弦乐Demo时，坚持要求全体弦乐手“模仿赤足踏过枯叶般轻柔的运弓法”来演奏副歌部分。",
+                answer: false
+            },
+            {
+                type: "judge",
+                question: "“MAD動画”这种创作形式在日本的兴起，主要原因是早期NHK教育频道的实验性节目提供了“合法且免费的高质量动画素材片段”供爱好者剪辑使用。",
+                answer: false
+            },
+            {
+                type: "judge",
+                question: "日本歌手KOKIA在所有公开发行的现场演唱会视频中，都严格避免出现任何“工作人员在地板上铺设用于保护其光脚的特殊地垫”的画面。",
+                answer: false
+            }
+        ];
+
+        // 全局变量
+        let currentQuestion = 0;
+        let userAnswers = Array(questions.length).fill(null);
+        let score = 0;
+        let timeLeft = 600; // 10分钟（秒）
+        let timerInterval;
+        
+        // DOM元素
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const examScreen = document.getElementById('examScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const questionContainer = document.getElementById('questionContainer');
+        const timerDisplay = document.querySelector('.timer');
+        const startButton = document.getElementById('startButton');
+        const mockModal = document.getElementById('mockModal');
+        const timeoutModal = document.getElementById('timeoutModal');
+        const restartButton = document.getElementById('restartButton');
+        
+        // 开始考试
+        startButton.addEventListener('click', () => {
+            welcomeScreen.style.display = 'none';
+            examScreen.style.display = 'block';
+            startTimer();
+            showQuestion(currentQuestion);
+        });
+        
+        // 重新开始考试
+        restartButton.addEventListener('click', resetExam);
+        document.getElementById('mockButton').addEventListener('click', resetExam);
+        document.getElementById('timeoutButton').addEventListener('click', resetExam);
+        
+        // 计时器函数
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitAnswers();
+                    timeoutModal.style.display = 'flex';
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // 最后1分钟变成红色
+            if (timeLeft < 60) {
+                timerDisplay.style.color = '#F44336';
+                timerDisplay.style.textShadow = '0 0 8px rgba(244, 67, 54, 0.5)';
+            }
+        }
+        
+        // 显示问题
+        function showQuestion(index) {
+            const q = questions[index];
+            let questionHTML = `
+                <div class="question-wrapper">
+                    <div class="question-header">
+                        <div class="question-number">${index + 1}</div>
+                        <div class="question-title">${q.question}</div>
+                    </div>
+            `;
+            
+            // 根据题型生成不同内容
+            if (q.type === 'choice') {
+                questionHTML += `
+                    <div class="options-container">
+                        ${q.options.map((option, i) => `
+                            <div class="option ${userAnswers[index] === i ? 'selected' : ''}" data-index="${i}">
+                                <div class="option-identifier">${String.fromCharCode(65 + i)}</div>
+                                <div>${option}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } 
+            else if (q.type === 'fill') {
+                questionHTML += `
+                    <div class="fill-blank-container">
+                        <div class="fill-blank">
+                            <input type="text" class="fill-blank-input" placeholder="请输入答案" id="fillAnswer" value="${userAnswers[index] || ''}">
+                        </div>
+                    </div>
+                `;
+            } 
+            else if (q.type === 'judge') {
+                questionHTML += `
+                    <div class="judge-options">
+                        <div class="judge-option true ${userAnswers[index] === true ? 'selected' : ''}">✓ 正确</div>
+                        <div class="judge-option false ${userAnswers[index] === false ? 'selected' : ''}">✗ 错误</div>
+                    </div>
+                `;
+            }
+            
+            // 添加提示（如果有）
+            if (q.hint) {
+                questionHTML += `<div class="hint">${q.hint}</div>`;
+            }
+            
+            // 添加导航按钮
+            let buttonHTML = '';
+            if (index < questions.length - 1) {
+                buttonHTML = `
+                    <div class="action-buttons">
+                        ${index > 0 ? '<button id="prevButton" class="nav-button">上一题</button>' : '<div></div>'}
+                        <button id="nextButton" class="nav-button">下一题</button>
+                    </div>
+                `;
+            } else {
+                buttonHTML = `
+                    <div class="action-buttons">
+                        ${index > 0 ? '<button id="prevButton" class="nav-button">上一题</button>' : '<div></div>'}
+                        <button id="submitButton" class="nav-button">提交答卷</button>
+                    </div>
+                `;
+            }
+            
+            questionHTML += buttonHTML + '</div>';
+            questionContainer.innerHTML = questionHTML;
+            
+            // 添加事件监听器
+            if (q.type === 'choice') {
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        userAnswers[index] = parseInt(option.dataset.index);
+                    });
+                });
+            }
+            else if (q.type === 'fill') {
+                document.getElementById('fillAnswer').addEventListener('input', (e) => {
+                    userAnswers[index] = e.target.value;
+                });
+            }
+            else if (q.type === 'judge') {
+                document.querySelectorAll('.judge-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        document.querySelectorAll('.judge-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        userAnswers[index] = option.classList.contains('true') ? true : false;
+                    });
+                });
+            }
+            
+            // 上一题按钮
+            if (index > 0) {
+                document.getElementById('prevButton').addEventListener('click', () => {
+                    currentQuestion--;
+                    showQuestion(currentQuestion);
+                });
+            }
+            
+            // 下一题/提交按钮
+            const nextButton = index < questions.length - 1 ? 
+                document.getElementById('nextButton') : document.getElementById('submitButton');
+            
+            nextButton.addEventListener('click', () => {
+                if (userAnswers[index] === null) {
+                    alert('请回答当前题目后再继续！');
+                    return;
+                }
+                
+                if (index < questions.length - 1) {
+                    currentQuestion++;
+                    showQuestion(currentQuestion);
+                } else {
+                    submitAnswers();
+                }
+            });
+        }
+        
+        // 提交答案
+        function submitAnswers() {
+            clearInterval(timerInterval);
+            
+            // 计算分数
+            score = 0;
+            questions.forEach((q, index) => {
+                if (userAnswers[index] === null) return;
+                
+                if (q.type === 'choice' && userAnswers[index] === q.answer) {
+                    score += 10;
+                }
+                else if (q.type === 'fill' && userAnswers[index].trim().toLowerCase() === q.answer.toLowerCase()) {
+                    score += 10;
+                }
+                else if (q.type === 'judge' && userAnswers[index] === q.answer) {
+                    score += 10;
+                }
+            });
+            
+            // 显示结果
+            examScreen.style.display = 'none';
+            resultScreen.style.display = 'block';
+            
+            document.getElementById('scoreDisplay').textContent = score;
+            
+            let resultMessage = '';
+            if (score >= 90) {
+                resultMessage = `恭喜！你的二次元浓度为${score}%，纯度惊人！<br>简直就是行走的二次元百科全书！<br>获得进入B站的VIP通行证！`;
+            } else if (score >= 60) {
+                resultMessage = `你的二次元浓度为${score}%，勉强过关！<br>虽然有点勉强，但还算是个合格的二次元！<br>获得进入B站的普通通行证！`;
+            } else {
+                resultMessage = `你的二次元浓度只有${score}%，连萌新都不如！<br>二次元纯度太低，建议多补番多学习！<br>暂时无法进入二次元圣地。`;
+            }
+            
+            document.getElementById('resultMessage').innerHTML = resultMessage;
+            
+            // 根据分数显示不同操作
+            if (score >= 60) {
+                setTimeout(() => {
+                    window.location.href = 'https://www.bilibili.com';
+                }, 3000);
+            } else {
+                setTimeout(() => {
+                    mockModal.style.display = 'flex';
+                }, 2000);
+            }
+        }
+        
+        // 重置考试
+        function resetExam() {
+            currentQuestion = 0;
+            userAnswers = Array(questions.length).fill(null);
+            score = 0;
+            timeLeft = 600;
+            
+            mockModal.style.display = 'none';
+            timeoutModal.style.display = 'none';
+            resultScreen.style.display = 'none';
+            examScreen.style.display = 'block';
+            
+            startTimer();
+            showQuestion(currentQuestion);
+        }
+    </script>
+</body>
+</html>
